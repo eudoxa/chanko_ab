@@ -67,7 +67,7 @@ module ChankoAb
           return pattern_by_overwritten
         else
           index = decide_pattern_index
-          return nil unless index
+          return nil if index > patterns.size
           return patterns[index]
         end
       end
@@ -85,34 +85,32 @@ module ChankoAb
     end
 
     class NumberIdentifier < Base
-      JUST_PATTERN_SIZES = [1, 2, 5, 10]
+      DEFAULT_JUST_PATTERN_SIZES = [1, 2, 5, 10]
+
+      def just_pattern_sizes
+        DEFAULT_JUST_PATTERN_SIZES
+      end
+
       def should_run_default?
         return true if !item
         @identifier.blank?
       end
 
-      def sample_padding(size)
-        return 0 if size == 0
-        raise 'too large size' if size >= 10
-        JUST_PATTERN_SIZES.each do |n|
-          padding = n - size;
-          return padding if padding >= 0
-        end
-      end
-
       def ab_index(identifier, size, using_index)
         unless Rails.env.production?
-          raise "argument should be a divisor of 10 but #{size}" if !JUST_PATTERN_SIZES.member?(size)
+          raise "argument should be a divisor of 10 but #{size}" if !just_pattern_sizes.member?(size)
           raise "identifier is blank" if identifier.blank?
-          raise "using_index error" if identifier.size <= (using_index + 1)
+          raise "using_index error" if identifier.size < (using_index + 1)
         end
         using_number = identifier.slice(-(using_index + 1)).to_i
         using_number % size
       end
 
       def decide_pattern_index
-        filled_patterns = patterns + ([nil] * sample_padding(patterns.size))
-        ab_index(@identifier, filled_patterns.size, @using_index)
+        return 0 if patterns.size == 0
+        raise 'too large size' if patterns.size >= just_pattern_sizes.max
+        size = just_pattern_sizes.select { |size| size >= patterns.size }.min
+        ab_index(@identifier, size, @using_index)
       end
     end
   end
