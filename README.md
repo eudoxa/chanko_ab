@@ -38,7 +38,7 @@ module MySplitTest
   split_test.add(:default, {})
   split_test.add(:pattern1, { partial: 'partial1'} )
 
-  split_test.log_tesmplate('show' ,'my_split_test.[name]')
+  split_test.log_tenmplate('show' ,'my_split_test.[name]')
 
   split_test.define(:new_text, scope: :view) do
     ab.log('show')
@@ -50,6 +50,15 @@ module MySplitTest
       render ab.fetch(:partial)
     end
   end
+end
+```
+
+# Set HexIdentifier if identifier is composed by hex.
+```ruby
+module HexMySplitTest
+  ...
+  split_test.logic ChankoAb::Logic::HexIdentifier
+  ...
 end
 ```
 
