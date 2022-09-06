@@ -1,0 +1,16 @@
+inherit_from: https://raw.githubusercontent.com/cookpad/styleguide/master/.rubocop.yml
+
+inherit_mode:
+  merge:
+    - Exclude
+    - Include
+
+require:
+  - rubocop-rspec
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+
+Layout/LineLength:
+  Enabled: false

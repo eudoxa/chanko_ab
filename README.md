@@ -53,7 +53,7 @@ module MySplitTest
 end
 ```
 
-# Set HexIdentifier if identifier is composed by hex.
+### Use HexIdentifier if identifier is composed by hex.
 ```ruby
 module HexMySplitTest
   ...
