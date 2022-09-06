@@ -59,14 +59,6 @@ module ChankoAb
       @using_index = index
     end
 
-    def use_user_via(&user_proc)
-      @user_proc = user_proc
-    end
-
-    def user_ab?
-      !!@user_proc
-    end
-
     def define(key, options = {}, &block)
       __split_test__ = self
       unit.class_eval do
