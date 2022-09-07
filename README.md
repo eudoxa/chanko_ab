@@ -53,6 +53,15 @@ module MySplitTest
 end
 ```
 
+### Switch using identifier
+```ruby
+module MySplitTest
+  ...
+  split_test.identifier { cookies[:unique_id] }
+  ...
+end
+```
+
 ### Use HexIdentifier if identifier is composed by hex.
 ```ruby
 module HexMySplitTest
