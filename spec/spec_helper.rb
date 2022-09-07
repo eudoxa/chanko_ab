@@ -1,7 +1,6 @@
 require 'rubygems'
 require 'chanko'
 require 'chanko_ab'
-require "chanko_ab/test"
 
 class Chanko::Loader
   def add_autoload_path
@@ -17,7 +16,7 @@ class ChankoAdoptedClass
   end
 
   def request
-    { }
+    {}
   end
 end
 
