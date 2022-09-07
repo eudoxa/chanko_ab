@@ -1,4 +1,5 @@
 require "chanko_ab/version"
+require "chanko_ab/test"
 require "chanko_ab/split_test"
 require "chanko_ab/logic/base"
 require "chanko_ab/logic/number_identifier"
