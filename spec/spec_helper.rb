@@ -36,3 +36,5 @@ module ChankoAbTest
     ab.log('my_log')
   end
 end
+
+ChankoAb.env = :test
