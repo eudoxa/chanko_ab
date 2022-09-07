@@ -24,7 +24,7 @@ ChankoAb.set_logging do |name|
   Rails.logger.debug(name)
 end
 
-ChankoAb.set_identifier do
+ChankoAb.set_default_identifier do
   cookies[:identifier]
 end
 ```

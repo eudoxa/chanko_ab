@@ -6,7 +6,7 @@ describe ChankoAb do
   end
 
   before do
-    ChankoAbTest.class_eval do
+    ChankoAbExperiment.class_eval do
       split_test.logic ChankoAb::Logic::NumberIdentifier
       split_test.add 'A', {}
       split_test.add 'B', {}
@@ -14,14 +14,10 @@ describe ChankoAb do
     end
   end
 
-  after do
-    ChankoAbTest.split_test.reset_patterns
-  end
-
   describe 'Item' do
     context 'pattern 0' do
       before do
-        ChankoAb.set_identifier { '0' }
+        ChankoAbExperiment.split_test.identifier { '0' }
       end
 
       it 'returns A' do
@@ -31,7 +27,7 @@ describe ChankoAb do
 
     context 'pattern 1' do
       before do
-        ChankoAb.set_identifier { '1' }
+        ChankoAbExperiment.split_test.identifier { '1' }
       end
 
       it 'returns B' do
@@ -41,7 +37,7 @@ describe ChankoAb do
 
     context 'pattern 2' do
       before do
-        ChankoAb.set_identifier { '2' }
+        ChankoAbExperiment.split_test.identifier { '2' }
       end
 
       it 'returns C' do
@@ -51,7 +47,7 @@ describe ChankoAb do
 
     context 'pattern 3 which is non-assigned due to fraction' do
       before do
-        ChankoAb.set_identifier { '3' }
+        ChankoAbExperiment.split_test.identifier { '3' }
       end
 
       it 'returns nil' do
@@ -61,7 +57,7 @@ describe ChankoAb do
 
     context 'pattern 4 which is non-assigned due to fraction' do
       before do
-        ChankoAb.set_identifier { '4' }
+        ChankoAbExperiment.split_test.identifier { '4' }
       end
 
       it 'returns nil' do
@@ -71,7 +67,7 @@ describe ChankoAb do
 
     context 'pattern 5' do
       before do
-        ChankoAb.set_identifier { '5' }
+        ChankoAbExperiment.split_test.identifier { '5' }
       end
 
       it 'returns nil' do

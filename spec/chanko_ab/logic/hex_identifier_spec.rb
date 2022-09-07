@@ -6,7 +6,7 @@ describe ChankoAb::Logic::HexIdentifier do
   end
 
   before do
-    ChankoAbTest.class_eval do
+    ChankoAbExperiment.class_eval do
       split_test.logic ChankoAb::Logic::HexIdentifier
       split_test.add 'A', {}
       split_test.add 'B', {}
@@ -14,13 +14,9 @@ describe ChankoAb::Logic::HexIdentifier do
     end
   end
 
-  after do
-    ChankoAbTest.split_test.reset_patterns
-  end
-
   context 'pattern 0' do
     before do
-      ChankoAb.set_identifier { '0' }
+      ChankoAbExperiment.split_test.identifier { '0' }
     end
 
     it 'returns A' do
@@ -30,7 +26,7 @@ describe ChankoAb::Logic::HexIdentifier do
 
   context 'pattern e' do
     before do
-      ChankoAb.set_identifier { 'e' }
+      ChankoAbExperiment.split_test.identifier { 'e' }
     end
 
     it 'returns D' do
@@ -40,7 +36,7 @@ describe ChankoAb::Logic::HexIdentifier do
 
   context 'pattern f which is non-assigned due to fraction' do
     before do
-      ChankoAb.set_identifier { 'f' }
+      ChankoAbExperiment.split_test.identifier { 'f' }
     end
 
     it 'returns nil' do

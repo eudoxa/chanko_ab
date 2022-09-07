@@ -23,6 +23,18 @@ module ChankoAb
       @unit
     end
 
+    def identifier(&block)
+      @identifier_proc = block
+    end
+
+    def identifier_proc
+      @identifier_proc
+    end
+
+    def reset_identifier
+      @identifier_proc = nil
+    end
+
     def logic(logic)
       @logic = logic
     end
@@ -85,7 +97,11 @@ module ChankoAb
         end
 
         shared(:identifier) do
-          self.instance_eval(&ChankoAb.identifier_proc)
+          self.instance_eval(&identifier_proc)
+        end
+
+        shared(:identifier_proc) do
+          __split_test__.identifier_proc || ChankoAb.default_identifier_proc
         end
       end
     end

@@ -28,12 +28,12 @@ module ChankoAb
     @logging_proc = block
   end
 
-  def self.set_identifier(&block)
-    @identifier_proc = block
+  def self.set_default_identifier(&block)
+    @default_identifier_proc = block
   end
 
-  def self.identifier_proc
-    @identifier_proc
+  def self.default_identifier_proc
+    @default_identifier_proc
   end
 
   def self.default_logic

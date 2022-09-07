@@ -12,7 +12,7 @@ class ChankoAdoptedClass
   include Chanko::Invoker
 
   def call(name)
-    invoke(:chanko_ab_test, name)
+    invoke(:chanko_ab_experiment, name)
   end
 
   def request
@@ -20,7 +20,7 @@ class ChankoAdoptedClass
   end
 end
 
-module ChankoAbTest
+module ChankoAbExperiment
   include Chanko::Unit
   include ChankoAb
   module Logger; end
@@ -38,3 +38,11 @@ module ChankoAbTest
 end
 
 ChankoAb.env = :test
+
+RSpec.configure do |config|
+  config.after do
+    ChankoAb::Test.reset!
+    ChankoAbExperiment.split_test.reset_patterns
+    ChankoAbExperiment.split_test.reset_identifier
+  end
+end
