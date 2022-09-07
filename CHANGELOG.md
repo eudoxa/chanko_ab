@@ -1,4 +1,8 @@
 # Change Log
+## [0.2.2] (2022-09-07)
+### Fixed
+- Fix codes for tests
+
 ## [0.2.1] (2022-09-07)
 ### Fixed
 - Always load constants for testing to prevent unforeseen accident
