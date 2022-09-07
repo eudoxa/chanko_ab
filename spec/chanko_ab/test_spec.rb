@@ -6,18 +6,13 @@ describe ChankoAb::Test do
   end
 
   before do
-    ChankoAbTest.class_eval do
+    ChankoAbExperiment.class_eval do
       split_test.logic ChankoAb::Logic::NumberIdentifier
       split_test.add 'A', {}
       split_test.add 'B', {}
     end
 
-    ChankoAb.set_identifier { '0' }
-  end
-
-  after do
-    ChankoAbTest.split_test.reset_patterns
-    ChankoAb::Test.reset!
+    ChankoAbExperiment.split_test.identifier { '0' }
   end
 
   context "no overwrite" do
@@ -28,7 +23,7 @@ describe ChankoAb::Test do
 
   context "overwrite as pattern B" do
     before do
-      ChankoAb::Test.overwrite(ChankoAbTest, 'B')
+      ChankoAb::Test.overwrite(ChankoAbExperiment, 'B')
     end
 
     it 'returns B' do
