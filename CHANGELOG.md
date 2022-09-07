@@ -1,4 +1,7 @@
 # Change Log
+## [0.2.1] (2022-09-07)
+### Fixed
+- Always load constants for testing to prevent unforeseen accident
 
 ## [0.2.0] (2022-09-07)
 ### Added
