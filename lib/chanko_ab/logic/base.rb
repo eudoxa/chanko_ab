@@ -20,7 +20,7 @@ module ChankoAb
 
       def validate!
         unless Rails.env.production?
-          raise "Argument should be a divisor of #{just_patterns_size.max}, but #{split_size} is given." if !just_patterns_size.member?(split_size)
+          raise "Argument should be a divisor of #{just_patterns_size.max}, but #{split_size} is given." unless just_patterns_size.member?(split_size)
           raise "Identifier is blank" if @identifier.blank?
           raise "Identifier is too short" if @identifier.size < (@using_index + 1)
           raise 'Too large pattern size' if patterns.size >= just_pattern_sizes.max
@@ -32,7 +32,7 @@ module ChankoAb
       end
 
       def should_run_default?
-        return true if !item
+        return true unless item
         @identifier.blank?
       end
 
@@ -61,7 +61,7 @@ module ChankoAb
       end
 
       def item
-        if Rails.env.test? && ChankoAb::Test.overwritten?(@split_test.unit)
+        if (Rails.env.test? || ChankoAb.env == :test) && ChankoAb::Test.overwritten?(@split_test.unit)
           return pattern_by_overwritten
         else
           index = decide_pattern_index

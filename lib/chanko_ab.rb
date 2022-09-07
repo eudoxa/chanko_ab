@@ -6,6 +6,14 @@ require "chanko_ab/logic/number_identifier"
 require "chanko_ab/logic/hex_identifier"
 
 module ChankoAb
+  def self.env=(env)
+    @env = env
+  end
+
+  def self.env
+    @env
+  end
+
   module ClassMethods
     def split_test
       @split_test ||= SplitTest.new(self)
