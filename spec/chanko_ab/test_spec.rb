@@ -7,12 +7,10 @@ describe ChankoAb::Test do
 
   before do
     ChankoAbExperiment.class_eval do
-      split_test.logic ChankoAb::Logic::NumberIdentifier
-      split_test.add 'A', {}
-      split_test.add 'B', {}
+      split_test.identifier extractor: -> (ctx) { '0' }
+      split_test.add_cohort name: 'A', attributes: {}
+      split_test.add_cohort name: 'B', attributes: {}
     end
-
-    ChankoAbExperiment.split_test.identifier { '0' }
   end
 
   context "no overwrite" do

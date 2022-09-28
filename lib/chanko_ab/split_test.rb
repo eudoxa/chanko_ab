@@ -1,110 +1,64 @@
 module ChankoAb
   class SplitTest
+    attr_accessor :log_templates, :unit, :cohorts
     def initialize(unit)
-      @unit = unit
-      @patterns = []
-      @log_templates = {}
-
-      initialize_shared_methods
+      self.unit = unit
+      self.cohorts = []
+      self.log_templates = {}
     end
 
-    def process(caller_scope, request, identifier, &block)
-      process = logic_klass.new(self, caller_scope, request, identifier, @using_index)
-
-      processes.push(process)
-      begin
-        block.call(process)
-      ensure
-        processes.pop
-      end
+    def identifier(digit: 1, radix: 10, extractor:)
+      @identifier_allocator = IdentifierAllocator.new(digit: digit, radix: radix, extractor: extractor)
     end
 
-    def unit
-      @unit
-    end
-
-    def identifier(&block)
-      @identifier_proc = block
-    end
-
-    def identifier_proc
-      @identifier_proc
+    def identifier_allocator
+      @identifier_allocator || ChankoAb.default_identifier_allocator || raise('Should set identifier')
     end
 
     def reset_identifier
-      @identifier_proc = nil
+      @identifier_allocator = nil
     end
 
-    def logic(logic)
-      @logic = logic
+    def log_template(name:, template:)
+      self.log_templates[name] = template
     end
 
-    def logic_klass
-      @logic || ChankoAb.default_logic || ChankoAb::Logic::NumberIdentifier
+    def add_cohort(name:, attributes:)
+      self.cohorts << Cohort.new(name, attributes, self)
     end
 
-    def add(name, attributes)
-      @patterns << [name, attributes]
-    end
-
-    def reset_patterns
-      @patterns = []
-    end
-
-    def log_template(name, template)
-      @log_templates[name] = template
-    end
-
-    def patterns
-      @patterns
-    end
-
-    def fetch_template(name)
-      @log_templates[name]
-    end
-
-    def processes
-      @processes ||= []
-    end
-
-    def using_index(index)
-      @using_index = index
+    def reset_cohorts
+      self.cohorts = []
     end
 
     def define(key, options = {}, &block)
-      __split_test__ = self
-      unit.class_eval do
+      _split = self
+      self.unit.class_eval do
         scope(options[:scope] || :view) do
           function(key) do
-            __split_test__.process(self, request, identifier) do |process|
-              next run_default if process.should_run_default?
-              block.call(self, process)
+            invoking_context = self
+            next invoking_context.instance_exec(_split.overwritten_cohort, &block) if _split.overwritten?
+
+            cohort = _split.identifier_allocator.allocate(invoking_context, _split.cohorts.size).then do |allocated_number|
+              next nil unless allocated_number
+              _split.cohorts[allocated_number]
             end
+            next run_default unless cohort
+
+            invoking_context.instance_exec(cohort, &block)
           end
         end
       end
     end
 
-    def initialize_shared_methods
-      __split_test__ = self
-      @unit.class_eval do
-        shared(:unit_name) do
-          @units.last.name
-        end
-
-        shared(:ab) do
-          __split_test__.processes.last
-        end
-
-        shared(:identifier) do
-          self.instance_eval(&identifier_proc)
-        end
-
-        shared(:identifier_proc) do
-          __split_test__.identifier_proc || ChankoAb.default_identifier_proc
-        end
-      end
+    def overwritten?
+      (Rails.env.test? || ChankoAb.env == :test) && ChankoAb::Test.overwritten?(self.unit)
     end
-    private :initialize_shared_methods
+
+    def overwritten_cohort
+      overwritten_name = ChankoAb::Test.overwritten_name(self.unit)
+      cohort = cohorts.detect { |c| c.name == overwritten_name }
+      return cohort || raise("ChankoAb: specified no defined name '#{overwritten_name}'")
+    end
   end
 end

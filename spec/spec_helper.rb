@@ -1,4 +1,3 @@
-require 'rubygems'
 require 'chanko'
 require 'chanko_ab'
 
@@ -27,13 +26,13 @@ module ChankoAbExperiment
 
   active_if { true }
 
-  split_test.log_template('my_log' ,'my_log.[name]')
-  split_test.define(:name, scope: ChankoAdoptedClass) do |context, ab|
-    ab.name
+  split_test.log_template(name: 'my_log', template: 'my_log.[name]')
+  split_test.define(:name, scope: ChankoAdoptedClass) do |cohort|
+    cohort.name
   end
 
-  split_test.define(:log, scope: ChankoAdoptedClass) do |context, ab|
-    ab.log('my_log')
+  split_test.define(:log, scope: ChankoAdoptedClass) do |cohort|
+    cohort.log('my_log')
   end
 end
 
@@ -42,7 +41,8 @@ ChankoAb.env = :test
 RSpec.configure do |config|
   config.after do
     ChankoAb::Test.reset!
-    ChankoAbExperiment.split_test.reset_patterns
+    ChankoAb.reset_identifier
+    ChankoAbExperiment.split_test.reset_cohorts
     ChankoAbExperiment.split_test.reset_identifier
   end
 end
