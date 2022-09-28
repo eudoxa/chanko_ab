@@ -78,7 +78,7 @@ module ChankoAb
           function(key) do
             __split_test__.process(self, request, identifier) do |process|
               next run_default if process.should_run_default?
-              self.instance_eval(&block)
+              block.call(self, process)
             end
           end
         end

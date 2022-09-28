@@ -28,11 +28,11 @@ module ChankoAbExperiment
   active_if { true }
 
   split_test.log_template('my_log' ,'my_log.[name]')
-  split_test.define(:name, scope: ChankoAdoptedClass) do
+  split_test.define(:name, scope: ChankoAdoptedClass) do |context, ab|
     ab.name
   end
 
-  split_test.define(:log, scope: ChankoAdoptedClass) do
+  split_test.define(:log, scope: ChankoAdoptedClass) do |context, ab|
     ab.log('my_log')
   end
 end
