@@ -1,4 +1,8 @@
 # Change Log
+## [1.0.0] (2022-09-30)
+### Changed
+- Many method names and arguments have been changed. Please refer to the updated README.
+
 ## [0.3.3] (2022-09-07)
 ### Added
 - Support for selectable identifier for each experiment.

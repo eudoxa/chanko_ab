@@ -35,8 +35,8 @@ module MySplitTest
   include Chanko::Unit
   include ChankoAb
 
-  split_test.cohort name: :default, attributes: {}
-  split_test.cohort name: :pattern1, attributes: { partial: "partian1" }
+  split_test.add_cohort name: :default, attributes: {}
+  split_test.add_cohort name: :pattern1, attributes: { partial: "partian1" }
 
   split_test.log_template name: 'show' template: 'my_split_test.[name]'
 
