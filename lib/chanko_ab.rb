@@ -1,9 +1,8 @@
 require "chanko_ab/version"
 require "chanko_ab/test"
+require "chanko_ab/cohort"
 require "chanko_ab/split_test"
-require "chanko_ab/logic/base"
-require "chanko_ab/logic/number_identifier"
-require "chanko_ab/logic/hex_identifier"
+require "chanko_ab/identifier_allocator"
 
 module ChankoAb
   def self.env=(env)
@@ -24,28 +23,24 @@ module ChankoAb
     klass.extend(ClassMethods)
   end
 
-  def self.set_logging(&block)
+  def self.logging(&block)
     @logging_proc = block
   end
 
-  def self.set_default_identifier(&block)
-    @default_identifier_proc = block
+  def self.identifier(digit: 1, radix: 10, extractor:)
+    @default_identifier_allocator = IdentifierAllocator.new(digit: digit, radix: radix, extractor: extractor)
   end
 
-  def self.default_identifier_proc
-    @default_identifier_proc
+  def self.default_identifier_allocator
+    @default_identifier_allocator
   end
 
-  def self.default_logic
-    @default_logic
+  def self.reset_identifier
+    @default_identifier_allocator = nil
   end
 
-  def self.set_default_logic(logic)
-    @default_logic = logic
-  end
-
-  def self.log(caller_scope, name, options)
+  def self.log(name, attributes)
     raise 'Should implement logging proc via ChankoAb.set_logging {}' unless @logging_proc
-    caller_scope.instance_exec(name, options, &@logging_proc)
+    @logging_proc.call(name, attributes)
   end
 end

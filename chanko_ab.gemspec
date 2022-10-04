@@ -21,4 +21,5 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "chanko", ">= 2.1.0"
   spec.add_development_dependency "rspec"
+  spec.add_development_dependency "byebug"
 end

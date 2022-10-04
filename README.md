@@ -20,12 +20,12 @@ Or install it yourself as:
 ```ruby
 # Define logging code and identifier
 # e.g.
-ChankoAb.set_logging do |name|
+ChankoAb.logging do |name, attrs|
   Rails.logger.debug(name)
 end
 
-ChankoAb.set_default_identifier do
-  cookies[:identifier]
+ChankoAb.identifier digit: 1, radix: 10, extractor: -> (ctx) do
+  ctx.cookies[:identifier][-1]
 end
 ```
 
@@ -35,19 +35,20 @@ module MySplitTest
   include Chanko::Unit
   include ChankoAb
 
-  split_test.add(:default, {})
-  split_test.add(:pattern1, { partial: 'partial1'} )
+  split_test.add_cohort name: :default, attributes: {}
+  split_test.add_cohort name: :pattern1, attributes: { partial: "partian1" }
 
-  split_test.log_template('show' ,'my_split_test.[name]')
+  split_test.log_template name: 'show' template: 'my_split_test.[name]'
 
-  split_test.define(:new_text, scope: :view) do
-    ab.log('show')
-
-    case ab.name
-    when 'default'
-      run_default
-    else
-      render ab.fetch(:partial)
+  split_test.define(:new_text, scope: :view) do |cohort|
+    cohort.log('show')
+    context.instance_eval do
+      case cohort.name
+      when 'default'
+        run_default
+      else
+        render cohort.attributes[:partial]
+      end
     end
   end
 end
@@ -57,7 +58,11 @@ end
 ```ruby
 module MySplitTest
   ...
-  split_test.identifier { cookies[:unique_id] }
+
+  split_test.identifier digit: 1, radix: 10, extractor: -> (ctx) do
+    ctx.cookies&.then do |cookies|
+     cookies.[:identifier][-1]
+  end
   ...
 end
 ```
@@ -66,7 +71,9 @@ end
 ```ruby
 module HexMySplitTest
   ...
-  split_test.logic ChankoAb::Logic::HexIdentifier
+  split_test.identifier digit: 1, radix: 16, extractor: -> (ctx) do
+    ctx.cookies[:hex_identifier][-1]
+  end
   ...
 end
 ```
